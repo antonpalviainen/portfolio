@@ -1,0 +1,42 @@
+.item {
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.item,
+.row-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 110px;
+  box-sizing: border-box;
+  border: 5px solid black;
+}
+
+.list {
+  background-color: black;
+  width: 1200px;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 110px;
+}
+
+.row:last-child {
+  margin-top: 50px;
+}
+
+.row:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.row-label {
+  color: black;
+  word-wrap: break-word;
+  padding: 0 10px;
+  text-align: center;
+}
