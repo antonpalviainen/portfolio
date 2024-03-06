@@ -1,57 +1,82 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
-
-import { requireUserId } from "~/session.server";
-import { useOptionalUser } from "~/utils";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const userId = await requireUserId(request);
-
-  return userId;
-}
+import type { MetaFunction } from '@remix-run/node'
+import { Link } from '@remix-run/react'
 
 export default function Index() {
-  const user = useOptionalUser();
-
   return (
-    <main className="relative min-h-screen sm:flex sm:items-center sm:justify-center">
-      <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-        {user ? (
-          <div>
-            <Link
-              to="/demos"
-              className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-slate-700 shadow-sm hover:bg-slate-100 sm:px-8"
-            >
-              View Demos
-            </Link>
-            <Form action="/logout" method="post">
-              <button
-                type="submit"
-                className="rounded bg-slate-600 px-4 py-2 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
-              >
-                Logout
-              </button>
-            </Form>
-          </div>
-        ) : (
-          <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-            <Link
-              to="/join"
-              className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-slate-700 shadow-sm hover:bg-slate-100 sm:px-8"
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/login"
-              className="flex items-center justify-center rounded-md bg-slate-500 px-4 py-3 font-medium text-white hover:bg-slate-600"
-            >
-              Log In
-            </Link>
-          </div>
-        )}
-      </div>
+    <main className="flex flex-col min-h-screen p-4 space-y-12">
+      <section className="flex flex-col justify-center items-center md:mt-56 ">
+        <h1 className="text-6xl font-bold mb-3">Links</h1>
+        <p className="text-center">
+          <a
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            href="https://antonpalviainen.dev"
+          >
+            antonpalviainen.dev
+          </a>
+          <span className="mx-2">-</span>
+          <a
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            href="https://github.com/antonpalviainen"
+          >
+            github.com/antonpalviainen
+          </a>
+          <span className="mx-2">-</span>
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="resume.pdf"
+            reloadDocument
+          >
+            Résumé
+          </Link>
+        </p>
+      </section>
+      <section className="flex flex-col justify-center items-center">
+        <h1 className="text-6xl font-bold mb-3">Demos</h1>
+        <p className="text-center">
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="/demos/1-tierlist"
+            rel="prefetch"
+          >
+            Tierlist
+          </Link>
+          <span className="mx-2">-</span>
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="/demos/2-accounts"
+          >
+            User Accounts
+          </Link>
+          <span className="mx-2">-</span>
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="/demos/404-does-not-exist"
+          >
+            Error Page
+          </Link>
+        </p>
+      </section>
+      <section className="flex flex-col justify-center items-center">
+        <h1 className="text-6xl font-bold mb-3">Notes</h1>
+        <p className="text-center">
+          Created using{' '}
+          <a
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            href="https://remix.run"
+          >
+            Remix
+          </a>{' '}
+          and{' '}
+          <a
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            href="https://react.dev"
+          >
+            React
+          </a>
+        </p>
+      </section>
     </main>
-  );
+  )
 }
 
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
+export const meta: MetaFunction = () => [{ title: 'Remix Notes' }]

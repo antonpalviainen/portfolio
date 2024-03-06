@@ -2,82 +2,82 @@ import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
-} from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
+import { useEffect, useRef } from 'react'
 
-import { verifyLogin } from "~/models/user.server";
-import { createUserSession, getUserId } from "~/session.server";
-import { safeRedirect, validateEmail } from "~/utils";
+import { verifyLogin } from '~/models/user.server'
+import { safeRedirect, validateEmail } from '~/utils/misc'
+import { createUserSession, getUserId } from '~/utils/session.server'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
-};
+  const userId = await getUserId(request)
+  if (userId) return redirect('/')
+  return json({})
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
-  const remember = formData.get("remember");
+  const formData = await request.formData()
+  const email = formData.get('email')
+  const password = formData.get('password')
+  const redirectTo = safeRedirect(formData.get('redirectTo'), '/')
+  const remember = formData.get('remember')
 
   if (!validateEmail(email)) {
     return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 },
-    );
+      { errors: { email: 'Email is invalid', password: null } },
+      { status: 400 }
+    )
   }
 
-  if (typeof password !== "string" || password.length === 0) {
+  if (typeof password !== 'string' || password.length === 0) {
     return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 },
-    );
+      { errors: { email: null, password: 'Password is required' } },
+      { status: 400 }
+    )
   }
 
   if (password.length < 8) {
     return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 },
-    );
+      { errors: { email: null, password: 'Password is too short' } },
+      { status: 400 }
+    )
   }
 
-  const user = await verifyLogin(email, password);
+  const user = await verifyLogin(email, password)
 
   if (!user) {
     return json(
-      { errors: { email: "Invalid email or password", password: null } },
-      { status: 400 },
-    );
+      { errors: { email: 'Invalid email or password', password: null } },
+      { status: 400 }
+    )
   }
 
   return createUserSession({
     redirectTo,
-    remember: remember === "on" ? true : false,
+    remember: remember === 'on' ? true : false,
     request,
     userId: user.id,
-  });
-};
+  })
+}
 
-export const meta: MetaFunction = () => [{ title: "Login" }];
+export const meta: MetaFunction = () => [{ title: 'Login' }]
 
 export default function LoginPage() {
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/notes";
-  const actionData = useActionData<typeof action>();
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || '/notes'
+  const actionData = useActionData<typeof action>()
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (actionData?.errors?.email) {
-      emailRef.current?.focus();
+      emailRef.current?.focus()
     } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
+      passwordRef.current?.focus()
     }
-  }, [actionData]);
+  }, [actionData])
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -161,11 +161,11 @@ export default function LoginPage() {
               </label>
             </div>
             <div className="text-center text-sm text-zinc-300">
-              Don&apos;t have an account?{" "}
+              Don&apos;t have an account?{' '}
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: "/join",
+                  pathname: '/join',
                   search: searchParams.toString(),
                 }}
               >
@@ -176,5 +176,5 @@ export default function LoginPage() {
         </Form>
       </div>
     </div>
-  );
+  )
 }

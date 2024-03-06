@@ -85,6 +85,7 @@ module.exports = {
             "newlines-between": "always",
           },
         ],
+        semi: ["error", "never"],
       },
     },
 
