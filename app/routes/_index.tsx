@@ -79,4 +79,4 @@ export default function Index() {
   )
 }
 
-export const meta: MetaFunction = () => [{ title: 'Remix Notes' }]
+export const meta: MetaFunction = () => [{ title: 'antonpalviainen' }]
