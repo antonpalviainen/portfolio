@@ -7,9 +7,9 @@ import { json, redirect } from '@remix-run/node'
 import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
 
-import { createUser, getUserByEmail } from '~/models/user.server'
+import { verifyLogin } from '~/models/user.server'
+import { safeRedirect } from '~/utils/misc'
 import { createUserSession, getUserId } from '~/utils/session.server'
-import { safeRedirect, validateEmail } from '~/utils/misc'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request)
@@ -19,99 +19,87 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
-  const email = formData.get('email')
+  const username = formData.get('username')
   const password = formData.get('password')
   const redirectTo = safeRedirect(formData.get('redirectTo'), '/')
+  const remember = formData.get('remember')
 
-  if (!validateEmail(email)) {
+  if (typeof username !== 'string' || username.length === 0) {
     return json(
-      { errors: { email: 'Email is invalid', password: null } },
+      { errors: { username: 'Username is required', password: null } },
       { status: 400 }
     )
   }
 
   if (typeof password !== 'string' || password.length === 0) {
     return json(
-      { errors: { email: null, password: 'Password is required' } },
+      { errors: { username: null, password: 'Password is required' } },
       { status: 400 }
     )
   }
 
-  if (password.length < 8) {
+  const user = await verifyLogin(username, password)
+
+  if (!user) {
     return json(
-      { errors: { email: null, password: 'Password is too short' } },
+      { errors: { username: 'Invalid username or password', password: null } },
       { status: 400 }
     )
   }
-
-  const existingUser = await getUserByEmail(email)
-  if (existingUser) {
-    return json(
-      {
-        errors: {
-          email: 'A user already exists with this email',
-          password: null,
-        },
-      },
-      { status: 400 }
-    )
-  }
-
-  const user = await createUser(email, password)
 
   return createUserSession({
     redirectTo,
-    remember: false,
+    remember: remember === 'on' ? true : false,
     request,
     userId: user.id,
   })
 }
 
-export const meta: MetaFunction = () => [{ title: 'Sign Up' }]
+export const meta: MetaFunction = () => [{ title: 'Login' }]
 
-export default function Join() {
+export default function LoginPage() {
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') ?? undefined
+  const redirectTo = searchParams.get('redirectTo') || '/'
   const actionData = useActionData<typeof action>()
-  const emailRef = useRef<HTMLInputElement>(null)
+  const usernameRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus()
+    if (actionData?.errors?.username) {
+      usernameRef.current?.focus()
     } else if (actionData?.errors?.password) {
       passwordRef.current?.focus()
     }
   }, [actionData])
 
   return (
-    <div className="flex min-h-full flex-col justify-center">
+    <div className="flex min-h-full flex-col justify-center w-full max-w-md mx-auto">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium text-zinc-300"
             >
-              Email address
+              Username
             </label>
             <div className="mt-1">
               <input
-                ref={emailRef}
-                id="email"
+                ref={usernameRef}
+                id="username"
                 required
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={true}
-                name="email"
-                type="email"
-                autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
-                className="w-full rounded px-2 py-1 text-lg text-zinc-900"
+                name="username"
+                type="text"
+                aria-invalid={actionData?.errors?.username ? true : undefined}
+                aria-describedby="username-error"
+                className="w-full rounded border border-gray-500 px-2 py-1 text-lg text-zinc-900"
+                placeholder="admin"
               />
-              {actionData?.errors?.email ? (
-                <div className="pt-1 text-red-700" id="email-error">
-                  {actionData.errors.email}
+              {actionData?.errors?.username ? (
+                <div className="pt-1 text-red-700" id="username-error">
+                  {actionData.errors.username}
                 </div>
               ) : null}
             </div>
@@ -130,10 +118,11 @@ export default function Join() {
                 ref={passwordRef}
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
-                className="w-full rounded px-2 py-1 text-lg text-zinc-900"
+                className="w-full rounded border border-gray-500 px-2 py-1 text-lg text-zinc-900"
+                placeholder="test"
               />
               {actionData?.errors?.password ? (
                 <div className="pt-1 text-red-700" id="password-error">
@@ -148,19 +137,33 @@ export default function Join() {
             type="submit"
             className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
           >
-            Create Account
+            Log in
           </button>
-          <div className="flex items-center justify-center">
-            <div className="text-center text-sm text-zinc-300">
-              Already have an account?{' '}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label
+                htmlFor="remember"
+                className="ml-2 block text-sm text-zinc-300"
+              >
+                Remember me
+              </label>
+            </div>
+            <div className="ml-2 text-center text-sm text-zinc-300">
+              Don&apos;t have an account?{' '}
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: '/login',
+                  pathname: '/demos/join',
                   search: searchParams.toString(),
                 }}
               >
-                Log in
+                Sign up
               </Link>
             </div>
           </div>
