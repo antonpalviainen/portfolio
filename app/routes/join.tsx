@@ -78,7 +78,7 @@ export default function Join() {
   }, [actionData])
 
   return (
-    <div className="flex min-h-full flex-col justify-center w-full max-w-md mx-auto">
+    <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
@@ -99,6 +99,7 @@ export default function Join() {
                 type="text"
                 aria-invalid={actionData?.errors?.username ? true : undefined}
                 aria-describedby="username-error"
+                autoComplete="username"
                 className="w-full rounded px-2 py-1 text-lg text-zinc-900"
               />
               {actionData?.errors?.username ? (
@@ -148,7 +149,7 @@ export default function Join() {
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: '/demos/login',
+                  pathname: '/login',
                   search: searchParams.toString(),
                 }}
               >

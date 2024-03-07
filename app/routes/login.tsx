@@ -94,6 +94,7 @@ export default function LoginPage() {
                 type="text"
                 aria-invalid={actionData?.errors?.username ? true : undefined}
                 aria-describedby="username-error"
+                autoComplete="username"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg text-zinc-900"
                 placeholder="admin"
               />
@@ -159,7 +160,7 @@ export default function LoginPage() {
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: '/demos/join',
+                  pathname: '/join',
                   search: searchParams.toString(),
                 }}
               >
