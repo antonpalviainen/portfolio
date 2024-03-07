@@ -73,14 +73,11 @@ export default function LoginPage() {
   }, [actionData])
 
   return (
-    <div className="flex min-h-full flex-col justify-center w-full max-w-md mx-auto">
+    <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-zinc-300"
-            >
+            <label htmlFor="username" className="block text-sm font-medium">
               Username
             </label>
             <div className="mt-1">
@@ -92,14 +89,13 @@ export default function LoginPage() {
                 autoFocus={true}
                 name="username"
                 type="text"
+                autoComplete="username"
                 aria-invalid={actionData?.errors?.username ? true : undefined}
                 aria-describedby="username-error"
-                autoComplete="username"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg text-zinc-900"
-                placeholder="admin"
+                className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
               />
               {actionData?.errors?.username ? (
-                <div className="pt-1 text-red-700" id="username-error">
+                <div className="pt-1 text-red-600" id="username-error">
                   {actionData.errors.username}
                 </div>
               ) : null}
@@ -107,10 +103,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-zinc-300"
-            >
+            <label htmlFor="password" className="block text-sm font-medium">
               Password
             </label>
             <div className="mt-1">
@@ -122,11 +115,10 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg text-zinc-900"
-                placeholder="test"
+                className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
               />
               {actionData?.errors?.password ? (
-                <div className="pt-1 text-red-700" id="password-error">
+                <div className="pt-1 text-red-600" id="password-error">
                   {actionData.errors.password}
                 </div>
               ) : null}
@@ -148,14 +140,11 @@ export default function LoginPage() {
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <label
-                htmlFor="remember"
-                className="ml-2 block text-sm text-zinc-300"
-              >
+              <label htmlFor="remember" className="ml-2 block text-sm">
                 Remember me
               </label>
             </div>
-            <div className="ml-2 text-center text-sm text-zinc-300">
+            <div className="text-center text-sm">
               Don&apos;t have an account?{' '}
               <Link
                 className="text-blue-500 underline"

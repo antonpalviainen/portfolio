@@ -82,10 +82,7 @@ export default function Join() {
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-zinc-300"
-            >
+            <label htmlFor="username" className="block text-sm font-medium">
               Username
             </label>
             <div className="mt-1">
@@ -97,13 +94,13 @@ export default function Join() {
                 autoFocus={true}
                 name="username"
                 type="text"
+                autoComplete="username"
                 aria-invalid={actionData?.errors?.username ? true : undefined}
                 aria-describedby="username-error"
-                autoComplete="username"
-                className="w-full rounded px-2 py-1 text-lg text-zinc-900"
+                className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
               />
               {actionData?.errors?.username ? (
-                <div className="pt-1 text-red-700" id="username-error">
+                <div className="pt-1 text-red-600" id="username-error">
                   {actionData.errors.username}
                 </div>
               ) : null}
@@ -111,10 +108,7 @@ export default function Join() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-zinc-300"
-            >
+            <label htmlFor="password" className="block text-sm font-medium">
               Password
             </label>
             <div className="mt-1">
@@ -126,10 +120,10 @@ export default function Join() {
                 autoComplete="new-password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
-                className="w-full rounded px-2 py-1 text-lg text-zinc-900"
+                className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
               />
               {actionData?.errors?.password ? (
-                <div className="pt-1 text-red-700" id="password-error">
+                <div className="pt-1 text-red-600" id="password-error">
                   {actionData.errors.password}
                 </div>
               ) : null}
@@ -144,7 +138,7 @@ export default function Join() {
             Create Account
           </button>
           <div className="flex items-center justify-center">
-            <div className="text-center text-sm text-zinc-300">
+            <div className="text-center text-sm">
               Already have an account?{' '}
               <Link
                 className="text-blue-500 underline"
