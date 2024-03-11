@@ -43,10 +43,18 @@ export default function Index() {
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
-            to="/demos/2-accounts"
+            to="/demos/2-highlight"
+          >
+            Highlight
+          </Link>
+          <span className="mx-2">-</span>
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="/demos/3-accounts"
           >
             User Accounts
           </Link>
+
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
