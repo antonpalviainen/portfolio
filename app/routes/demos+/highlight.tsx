@@ -99,36 +99,33 @@ export default function Page() {
 }
 
 function HighlighterDemo() {
-  const [queries, setQueries] = useState([0])
+  const [instances, setInstances] = useState([new Highlighter()])
 
   function handleAddQuery() {
-    setQueries([...queries, queries.length])
+    setInstances([...instances, new Highlighter()])
   }
 
-  function handleRemoveQuery(queryId: number) {
-    setQueries(queries.filter((id) => id !== queryId))
-  }
-
-  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
+  function handleRemoveQuery(instanceId: number) {
+    instances.find((instance) => instance.id === instanceId)?.destroy()
+    setInstances(instances.filter((instance) => instance.id !== instanceId))
   }
 
   return (
     <div className="highlighter-demos">
       <QueryForm
-        handleRemoveQuery={() => handleRemoveQuery(0)}
-        handleQuerySubmit={handleQuerySubmit}
+        instance={instances[0]}
+        handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
         initOptions={{
-          query: 'reg(?:ular )',
+          query: 'reg(?:ular)',
           backgroundColor: '#00aaff',
           expanded: true,
         }}
       />
-      {queries.slice(1).map((queryId) => (
+      {instances.slice(1).map((instance) => (
         <QueryForm
-          key={queryId}
-          handleRemoveQuery={() => handleRemoveQuery(queryId)}
-          handleQuerySubmit={handleQuerySubmit}
+          key={instance.id}
+          instance={instance}
+          handleRemoveQuery={() => handleRemoveQuery(instance.id)}
         />
       ))}
       <button
@@ -145,7 +142,6 @@ function HighlighterDemo() {
 interface QueryFormProps {
   instance: Highlighter
   handleRemoveQuery(): void
-  handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>): void
   initOptions?: {
     query?: string
     backgroundColor?: string
@@ -160,34 +156,23 @@ interface QueryFormProps {
 function QueryForm({
   instance,
   handleRemoveQuery,
-  handleQuerySubmit,
   initOptions,
 }: QueryFormProps) {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(initOptions?.query ?? '')
   const [error, setError] = useState('')
-  const [foregroundColor, setFGColor] = useState('#000000')
-  const [backgroundColor, setBGColor] = useState('#ffff00')
-  const [enabled, setEnabled] = useState(true)
-  const [expanded, setExpanded] = useState(false)
-  const [ignoreCase, setIgnoreCase] = useState(true)
-  const [isUsingRegex, setIsUsingRegex] = useState(true)
+  const [foregroundColor, setFGColor] = useState(
+    initOptions?.foregroundColor ?? '#000000'
+  )
+  const [backgroundColor, setBGColor] = useState(
+    initOptions?.backgroundColor ?? '#ffff00'
+  )
+  const [enabled, setEnabled] = useState(initOptions?.enabled ?? true)
+  const [expanded, setExpanded] = useState(initOptions?.expanded ?? false)
+  const [ignoreCase, setIgnoreCase] = useState(initOptions?.ignoreCase ?? true)
+  const [isUsingRegex, setIsUsingRegex] = useState(
+    initOptions?.isUsingRegex ?? true
+  )
   const [matchCount, setMatchCount] = useState(0)
-
-  useEffect(() => {
-    if (!initOptions) return
-
-    initOptions.backgroundColor && setBGColor(initOptions.backgroundColor)
-    initOptions.foregroundColor && setFGColor(initOptions.foregroundColor)
-    initOptions.enabled && setEnabled(initOptions.enabled)
-    initOptions.expanded && setExpanded(initOptions.expanded)
-    initOptions.ignoreCase && setIgnoreCase(initOptions.ignoreCase)
-    initOptions.isUsingRegex && setIsUsingRegex(initOptions.isUsingRegex)
-
-    if (initOptions.query) {
-      setQuery(initOptions.query)
-      instanceQuery(initOptions.query)
-    }
-  }, [initOptions])
 
   useEffect(() => {
     instance.upsertStyle(backgroundColor, foregroundColor)
@@ -213,6 +198,11 @@ function QueryForm({
 
   function handleBGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
     setBGColor(e.target.value)
+  }
+
+  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    instanceQuery(query)
   }
 
   function handleExpandOptions(e: React.MouseEvent<HTMLButtonElement>) {

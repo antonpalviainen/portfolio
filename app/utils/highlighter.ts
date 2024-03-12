@@ -19,6 +19,7 @@ export default class Highlighter {
 
   constructor() {
     this.id = ++Highlighter.count
+
     this.styleClass = `find-regex-highlight-${this.id}`
     this.css = `.${this.styleClass} { background-color: BACKGROUND_COLOR; color: FOREGROUND_COLOR; font-size: inherit; }`
     this.initColor = '#000000'
