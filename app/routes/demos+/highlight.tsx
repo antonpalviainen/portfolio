@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import options from '~/images/options.png'
-import './2-highlight.css'
+import './highlight.css'
 import Highlighter from '~/utils/highlighter'
 
 export default function Page() {
@@ -99,33 +99,36 @@ export default function Page() {
 }
 
 function HighlighterDemo() {
-  const [instances, setInstances] = useState([new Highlighter()])
+  const [queries, setQueries] = useState([0])
 
   function handleAddQuery() {
-    setInstances([...instances, new Highlighter()])
+    setQueries([...queries, queries.length])
   }
 
-  function handleRemoveQuery(instanceId: number) {
-    instances.find((instance) => instance.id === instanceId)?.destroy()
-    setInstances(instances.filter((instance) => instance.id !== instanceId))
+  function handleRemoveQuery(queryId: number) {
+    setQueries(queries.filter((id) => id !== queryId))
+  }
+
+  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
   }
 
   return (
     <div className="highlighter-demos">
       <QueryForm
-        instance={instances[0]}
-        handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
+        handleRemoveQuery={() => handleRemoveQuery(0)}
+        handleQuerySubmit={handleQuerySubmit}
         initOptions={{
-          query: 'reg(?:ular )?ex(?:pressions?)?',
+          query: 'reg(?:ular )',
           backgroundColor: '#00aaff',
           expanded: true,
         }}
       />
-      {instances.slice(1).map((instance) => (
+      {queries.slice(1).map((queryId) => (
         <QueryForm
-          key={instance.id}
-          instance={instance}
-          handleRemoveQuery={() => handleRemoveQuery(instance.id)}
+          key={queryId}
+          handleRemoveQuery={() => handleRemoveQuery(queryId)}
+          handleQuerySubmit={handleQuerySubmit}
         />
       ))}
       <button
@@ -142,6 +145,7 @@ function HighlighterDemo() {
 interface QueryFormProps {
   instance: Highlighter
   handleRemoveQuery(): void
+  handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>): void
   initOptions?: {
     query?: string
     backgroundColor?: string
@@ -156,6 +160,7 @@ interface QueryFormProps {
 function QueryForm({
   instance,
   handleRemoveQuery,
+  handleQuerySubmit,
   initOptions,
 }: QueryFormProps) {
   const [query, setQuery] = useState('')
@@ -208,11 +213,6 @@ function QueryForm({
 
   function handleBGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
     setBGColor(e.target.value)
-  }
-
-  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    instanceQuery(query)
   }
 
   function handleExpandOptions(e: React.MouseEvent<HTMLButtonElement>) {

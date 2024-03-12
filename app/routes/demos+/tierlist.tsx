@@ -6,7 +6,7 @@ import {
 } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 
-import './1-tierlist.css'
+import './tierlist.css'
 import apple from '../../images/apple.png'
 import banana from '../../images/banana.png'
 import kiwi from '../../images/kiwi.png'

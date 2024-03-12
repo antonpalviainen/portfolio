@@ -13,7 +13,7 @@ export default function DemosPage() {
               isActive ? 'text-[#a6bdd9]' : 'text-[#7896bd]'
             } hover:hover:text-[#a6bdd9]`
           }
-          to="1-tierlist"
+          to="tierlist"
         >
           Tierlist
         </NavLink>
@@ -23,7 +23,7 @@ export default function DemosPage() {
               isActive ? 'text-[#a6bdd9]' : 'text-[#7896bd]'
             } hover:hover:text-[#a6bdd9]`
           }
-          to="2-highlight"
+          to="highlight"
         >
           Highlight
         </NavLink>
@@ -33,7 +33,7 @@ export default function DemosPage() {
               isActive ? 'text-[#a6bdd9]' : 'text-[#7896bd]'
             } hover:hover:text-[#a6bdd9]`
           }
-          to="3-accounts"
+          to="accounts"
         >
           User Accounts
         </NavLink>

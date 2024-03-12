@@ -1,7 +1,7 @@
 import { redirect } from '@remix-run/node'
 
 export function loader() {
-  return redirect('/demos/1-tierlist')
+  return redirect('/demos/tierlist')
 }
 
 export default function DemoIndexPage() {

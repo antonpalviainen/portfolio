@@ -35,7 +35,7 @@ export default function Index() {
         <p className="text-center">
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
-            to="/demos/1-tierlist"
+            to="/demos/tierlist"
             rel="prefetch"
           >
             Tierlist
@@ -43,14 +43,14 @@ export default function Index() {
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
-            to="/demos/2-highlight"
+            to="/demos/highlight"
           >
             Highlight
           </Link>
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
-            to="/demos/3-accounts"
+            to="/demos/accounts"
           >
             User Accounts
           </Link>
