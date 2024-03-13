@@ -2,7 +2,7 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 
 export default function DemosPage() {
   return (
-    <div className="flex h-full min-h-screen flex-col">
+    <div className="flex flex-col">
       <header className="flex items-center p-4 gap-4">
         <Link to="/" className="font-bold hover:text-zinc-300">
           Home
@@ -49,7 +49,7 @@ export default function DemosPage() {
         </NavLink>
       </header>
 
-      <main className="flex h-full p-6">
+      <main className="p-6">
         <Outlet />
       </main>
     </div>

@@ -3,8 +3,8 @@ import { Link } from '@remix-run/react'
 
 export default function Index() {
   return (
-    <main className="flex flex-col min-h-screen p-4 space-y-12">
-      <section className="flex flex-col justify-center items-center md:mt-56 ">
+    <main className="flex flex-col p-4 space-y-12">
+      <section className="flex flex-col justify-center items-center md:mt-56">
         <h1 className="text-6xl font-bold mb-3">Links</h1>
         <p className="text-center">
           <a

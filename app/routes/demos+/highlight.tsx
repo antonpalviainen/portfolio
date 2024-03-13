@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import options from '~/images/options.png'
-import './highlight.css'
+// import './highlight.css'
 import Highlighter from '~/utils/highlighter'
 
 export default function Page() {
