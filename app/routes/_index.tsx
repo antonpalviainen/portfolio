@@ -47,6 +47,7 @@ export default function Index() {
           >
             Highlight
           </Link>
+          <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
             to="/demos/grid"
