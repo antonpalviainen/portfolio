@@ -17,7 +17,7 @@ export default function Accounts() {
       <Form action="/demos/logout" method="post" className='mt-4'>
         <button
           type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="w-full rounded bg-[#4d79b3] px-4 py-2 text-white hover:bg-[#346ab2] focus:bg-[#6a88af]"
         >
           Log out
         </button>

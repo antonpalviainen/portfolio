@@ -25,12 +25,15 @@
 
 button {
   height: 28px;
-  padding: 0 8px;
+  font-size: 15px;
 }
 
 button,
 input {
-  padding: 3px 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
   border-radius: 3px;
   background-color: var(--bg-medium);
   color: var(--fg-light);
@@ -45,6 +48,7 @@ button:disabled {
 input[type='color'] {
   height: 28px;
   width: 35px;
+  padding: 2px 4px;
 }
 
 label {
@@ -80,6 +84,11 @@ input:hover:not(:disabled) {
   gap: 8px;
 }
 
+.checkbox {
+  display: flex;
+  gap: 8px;
+}
+
 .error {
   color: rgb(255, 68, 68);
   font-size: 15px;
@@ -95,7 +104,6 @@ input:hover:not(:disabled) {
 }
 
 .query-input {
-  /* width: 100%; */
-  height: 20px;
+  height: 28px;
   font-size: 16px;
 }

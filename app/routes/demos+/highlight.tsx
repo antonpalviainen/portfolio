@@ -1,8 +1,12 @@
+import { LinksFunction } from '@remix-run/node'
 import { useEffect, useState } from 'react'
 
 import options from '~/images/options.png'
-// import './highlight.css'
 import Highlighter from '~/utils/highlighter'
+
+import styles from './highlight.css'
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export default function Page() {
   return (
@@ -268,22 +272,24 @@ function QueryForm({
       </div>
       {expanded ? (
         <div className="additional-settings">
-          <label>
+          <div className="checkbox">
             <input
+              id="isUsingRegex"
               type="checkbox"
               checked={isUsingRegex}
               onChange={handleIsUsingRegexToggle}
-            />{' '}
-            Regex
-          </label>
-          <label>
+            />
+            <label htmlFor="isUsingRegex">Regex</label>
+          </div>
+          <div className="checkbox">
             <input
+              id="ignoreCase"
               type="checkbox"
               checked={ignoreCase}
               onChange={handleIgnoreCaseToggle}
-            />{' '}
-            Ignore case
-          </label>
+            />
+            <label htmlFor="ignoreCase">Ignore case</label>
+          </div>
           <input
             type="color"
             value={foregroundColor}

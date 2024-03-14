@@ -148,83 +148,88 @@ function Grid() {
       <canvas ref={canvasRef} className="h-full">
         grid
       </canvas>
-      <div className="table ml-6">
-        <Field
-          label="Margin"
-          inputProps={{
-            type: 'number',
-            value: properties.margin,
-            min: 0,
-            onChange: (e) => updateProperty(e, 'margin'),
-          }}
-        />
-        <Field
-          label="Step"
-          inputProps={{
-            type: 'number',
-            value: properties.step,
-            onChange: (e) => updateProperty(e, 'step'),
-            min: 1,
-          }}
-        />
-        <Field
-          label="Major color"
-          inputProps={{
-            type: 'color',
-            value: properties.majorColor,
-            onChange: (e) => updateProperty(e, 'majorColor'),
-          }}
-        />
-        <Field
-          label="Minor color"
-          inputProps={{
-            type: 'color',
-            value: properties.minorColor,
-            onChange: (e) => updateProperty(e, 'minorColor'),
-          }}
-        />
-        <Field
-          label="Major width"
-          inputProps={{
-            type: 'number',
-            value: properties.majorWidth,
-            min: 1,
-            onChange: (e) => updateProperty(e, 'majorWidth'),
-          }}
-        />
-        <Field
-          label="Minor width"
-          inputProps={{
-            type: 'number',
-            value: properties.minorWidth,
-            min: 1,
-            onChange: (e) => updateProperty(e, 'minorWidth'),
-          }}
-        />
-        <Field
-          label="Dashed minor lines"
-          inputProps={{
-            type: 'checkbox',
-            checked: properties.dashedMinorLines,
-            onChange: (e) => updateProperty(e, 'dashedMinorLines'),
-          }}
-        />
-        <Field
-          label="Dash interval"
-          inputProps={{
-            type: 'number',
-            value: properties.dashInterval,
-            min: 1,
-            disabled: !properties.dashedMinorLines,
-            onChange: (e) => updateProperty(e, 'dashInterval'),
-          }}
-        />
-        <button
-          onClick={saveAsPng}
-          className="mt-3 p-1 bg-zinc-800 border border-white rounded hover:bg-zinc-700"
-        >
-          Export as PNG
-        </button>
+      <div className="ml-6">
+        <div className="table">
+          <Field
+            label="Margin"
+            inputProps={{
+              type: 'number',
+              value: properties.margin,
+              min: 0,
+              onChange: (e) => updateProperty(e, 'margin'),
+            }}
+          />
+          <Field
+            label="Step"
+            inputProps={{
+              type: 'number',
+              value: properties.step,
+              onChange: (e) => updateProperty(e, 'step'),
+              min: 1,
+            }}
+          />
+          <Field
+            label="Major color"
+            inputProps={{
+              type: 'color',
+              value: properties.majorColor,
+              onChange: (e) => updateProperty(e, 'majorColor'),
+            }}
+          />
+          <Field
+            label="Minor color"
+            inputProps={{
+              type: 'color',
+              value: properties.minorColor,
+              onChange: (e) => updateProperty(e, 'minorColor'),
+            }}
+          />
+          <Field
+            label="Major width"
+            inputProps={{
+              type: 'number',
+              value: properties.majorWidth,
+              min: 1,
+              onChange: (e) => updateProperty(e, 'majorWidth'),
+            }}
+          />
+          <Field
+            label="Minor width"
+            inputProps={{
+              type: 'number',
+              value: properties.minorWidth,
+              min: 1,
+              onChange: (e) => updateProperty(e, 'minorWidth'),
+            }}
+          />
+          <Field
+            label="Dashed minor lines"
+            inputProps={{
+              type: 'checkbox',
+              checked: properties.dashedMinorLines,
+              onChange: (e) => updateProperty(e, 'dashedMinorLines'),
+            }}
+          />
+          <Field
+            label="Dash interval"
+            inputProps={{
+              type: 'number',
+              value: properties.dashInterval,
+              min: 1,
+              disabled: !properties.dashedMinorLines,
+              onChange: (e) => updateProperty(e, 'dashInterval'),
+            }}
+          />
+          <button
+            onClick={saveAsPng}
+            className="w-full rounded bg-[#4d79b3] px-4 py-2 mt-3 text-white hover:bg-[#346ab2] focus:bg-[#6a88af]"
+          >
+            Export as PNG
+          </button>
+        </div>
+        <div className='mt-12'>
+          <p>An app for creating printable grids.</p>
+        </div>
       </div>
     </div>
   )
