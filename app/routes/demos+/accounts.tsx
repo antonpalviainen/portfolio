@@ -14,7 +14,7 @@ export default function Accounts() {
   return (
     <div>
       <div>Logged in: {data.user.username}</div>
-      <Form action="/logout" method="post" className='mt-4'>
+      <Form action="/demos/logout" method="post" className='mt-4'>
         <button
           type="submit"
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"

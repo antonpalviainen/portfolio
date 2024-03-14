@@ -30,6 +30,16 @@ export default function DemosPage() {
         <NavLink
           className={({ isActive }) =>
             `${
+              isActive ? 'text-[#a6bdd9] font-semibold' : 'text-[#7896bd]'
+            } hover:hover:text-[#a6bdd9]`
+          }
+          to="grid"
+        >
+          Grid
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `${
               isActive ? 'text-[#a6bdd9]' : 'text-[#7896bd]'
             } hover:hover:text-[#a6bdd9]`
           }
@@ -43,7 +53,7 @@ export default function DemosPage() {
               isActive ? 'text-[#a6bdd9]' : 'text-[#7896bd]'
             } hover:hover:text-[#a6bdd9]`
           }
-          to="404-does-not-exist"
+          to="does-not-exist"
         >
           Error Page
         </NavLink>

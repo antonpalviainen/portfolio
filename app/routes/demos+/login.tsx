@@ -7,7 +7,7 @@ import { json, redirect } from '@remix-run/node'
 import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
 
-import { createUser, getUserByUsername } from '~/models/user.server'
+import { verifyLogin } from '~/models/user.server'
 import { safeRedirect } from '~/utils/misc'
 import { createUserSession, getUserId } from '~/utils/session.server'
 
@@ -22,6 +22,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const username = formData.get('username')
   const password = formData.get('password')
   const redirectTo = safeRedirect(formData.get('redirectTo'), '/')
+  const remember = formData.get('remember')
 
   if (typeof username !== 'string' || username.length === 0) {
     return json(
@@ -37,34 +38,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     )
   }
 
-  const existingUser = await getUserByUsername(username)
-  if (existingUser) {
+  const user = await verifyLogin(username, password)
+
+  if (!user) {
     return json(
-      {
-        errors: {
-          username: 'A user already exists with this username',
-          password: null,
-        },
-      },
+      { errors: { username: 'Invalid username or password', password: null } },
       { status: 400 }
     )
   }
 
-  const user = await createUser(username, password)
-
   return createUserSession({
     redirectTo,
-    remember: false,
+    remember: remember === 'on' ? true : false,
     request,
     userId: user.id,
   })
 }
 
-export const meta: MetaFunction = () => [{ title: 'Sign Up' }]
+export const meta: MetaFunction = () => [{ title: 'Login' }]
 
-export default function Join() {
+export default function LoginPage() {
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') ?? undefined
+  const redirectTo = searchParams.get('redirectTo') || '/'
   const actionData = useActionData<typeof action>()
   const usernameRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
@@ -117,7 +112,7 @@ export default function Join() {
                 ref={passwordRef}
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
@@ -135,19 +130,30 @@ export default function Join() {
             type="submit"
             className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
           >
-            Create Account
+            Log in
           </button>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="remember" className="ml-2 block text-sm">
+                Remember me
+              </label>
+            </div>
             <div className="text-center text-sm">
-              Already have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: '/login',
+                  pathname: '/demos/join',
                   search: searchParams.toString(),
                 }}
               >
-                Log in
+                Sign up
               </Link>
             </div>
           </div>

@@ -4,7 +4,43 @@ function dpi(millimeters: number, dpi = 300) {
   return Math.round(millimeters * (5 / 127) * dpi)
 }
 
-function Canvas() {
+function drawLine(
+  ctx: CanvasRenderingContext2D,
+  start: [number, number],
+  end: [number, number]
+) {
+  ctx.beginPath()
+  ctx.moveTo(...start)
+  ctx.lineTo(...end)
+  ctx.closePath()
+  ctx.stroke()
+}
+
+function Field({
+  label,
+  inputProps,
+}: {
+  label: string
+  inputProps: React.InputHTMLAttributes<HTMLInputElement>
+}) {
+  const fallbackId = useId()
+  const id = inputProps.id ?? fallbackId
+
+  return (
+    <div className="table-row">
+      <label htmlFor={id} className="table-cell">
+        {label}
+      </label>
+      <input
+        id={id}
+        {...inputProps}
+        className="table-cell ml-3 mb-3 text-black"
+      />
+    </div>
+  )
+}
+
+function Grid() {
   const [properties, setProperties] = useState({
     margin: 10,
     step: 20,
@@ -12,8 +48,8 @@ function Canvas() {
     minorColor: '#5e5e5e',
     majorWidth: 5,
     minorWidth: 1,
-    dottedMinorLines: false,
-    dotInterval: 20,
+    dashedMinorLines: false,
+    dashInterval: 20,
   })
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -32,6 +68,7 @@ function Canvas() {
     const marginPx = dpi(properties.margin)
     const stepPx = dpi(properties.step)
 
+    // Grid dimensions
     const h = Math.floor((height - 2 * marginPx) / stepPx) * stepPx
     const w = Math.floor((width - 2 * marginPx) / stepPx) * stepPx
 
@@ -45,42 +82,33 @@ function Canvas() {
 
     ctx.strokeStyle = properties.minorColor
     ctx.lineWidth = properties.minorWidth
+    if (properties.dashedMinorLines) {
+      ctx.setLineDash([properties.minorWidth, properties.dashInterval])
+    }
 
+    // Minor grid
     for (let x = left + Math.round(stepPx / 2); x < right; x += stepPx) {
-      ctx.beginPath()
-      ctx.moveTo(x, top)
-      ctx.lineTo(x, bottom)
-      ctx.closePath()
-      ctx.stroke()
+      drawLine(ctx, [x, top], [x, bottom])
     }
 
     for (let y = top + Math.round(stepPx / 2); y < bottom; y += stepPx) {
-      ctx.beginPath()
-      ctx.moveTo(left, y)
-      ctx.lineTo(right, y)
-      ctx.closePath()
-      ctx.stroke()
+      drawLine(ctx, [left, y], [right, y])
     }
 
     ctx.strokeStyle = properties.majorColor
     ctx.lineWidth = properties.majorWidth
+    ctx.setLineDash([])
 
+    // Major grid
     for (let x = left + stepPx; x < right; x += stepPx) {
-      ctx.beginPath()
-      ctx.moveTo(x, top)
-      ctx.lineTo(x, bottom)
-      ctx.closePath()
-      ctx.stroke()
+      drawLine(ctx, [x, top], [x, bottom])
     }
 
     for (let y = top + stepPx; y < bottom; y += stepPx) {
-      ctx.beginPath()
-      ctx.moveTo(left, y)
-      ctx.lineTo(right, y)
-      ctx.closePath()
-      ctx.stroke()
+      drawLine(ctx, [left, y], [right, y])
     }
 
+    // Outlines
     ctx.strokeRect(left, top, w, h)
   }, [properties])
 
@@ -96,7 +124,7 @@ function Canvas() {
         value = parseInt(target.value)
         break
       case 'checkbox':
-        value = !target.checked
+        value = target.checked
         break
       default:
         value = target.value
@@ -106,12 +134,21 @@ function Canvas() {
     setProperties({ ...properties, [key]: value })
   }
 
+  async function saveAsPng() {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const link = document.createElement('a')
+    link.download = 'grid.png'
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }
+
   return (
     <div className="flex items-start h-[90vh]">
       <canvas ref={canvasRef} className="h-full">
         grid
       </canvas>
-      <div className="table">
+      <div className="table ml-6">
         <Field
           label="Margin"
           inputProps={{
@@ -151,8 +188,8 @@ function Canvas() {
           inputProps={{
             type: 'number',
             value: properties.majorWidth,
-            onChange: (e) => updateProperty(e, 'majorWidth'),
             min: 1,
+            onChange: (e) => updateProperty(e, 'majorWidth'),
           }}
         />
         <Field
@@ -160,56 +197,35 @@ function Canvas() {
           inputProps={{
             type: 'number',
             value: properties.minorWidth,
-            onChange: (e) => updateProperty(e, 'minorWidth'),
             min: 1,
+            onChange: (e) => updateProperty(e, 'minorWidth'),
           }}
         />
         <Field
-          label="Dotted minor lines"
+          label="Dashed minor lines"
           inputProps={{
             type: 'checkbox',
-            checked: properties.dottedMinorLines,
-            onChange: (e) => updateProperty(e, 'dottedMinorLines'),
+            checked: properties.dashedMinorLines,
+            onChange: (e) => updateProperty(e, 'dashedMinorLines'),
           }}
         />
         <Field
-          label="Dot interval"
+          label="Dash interval"
           inputProps={{
             type: 'number',
-            value: properties.dotInterval,
-            onChange: (e) => updateProperty(e, 'dotInterval'),
+            value: properties.dashInterval,
             min: 1,
+            disabled: !properties.dashedMinorLines,
+            onChange: (e) => updateProperty(e, 'dashInterval'),
           }}
         />
+        <button
+          onClick={saveAsPng}
+          className="mt-3 p-1 bg-zinc-800 border border-white rounded hover:bg-zinc-700"
+        >
+          Export as PNG
+        </button>
       </div>
-    </div>
-  )
-}
-
-function Field({
-  label,
-  inputProps,
-}: {
-  label: string
-  inputProps: React.InputHTMLAttributes<HTMLInputElement>
-}) {
-  const fallbackId = useId()
-  const id = inputProps.id ?? fallbackId
-
-  return (
-    <div className="table-row">
-      <label htmlFor={id} className="table-cell">
-        {label}
-      </label>
-      <input id={id} {...inputProps} className="table-cell text-black" />
-    </div>
-  )
-}
-
-function Grid() {
-  return (
-    <div>
-      <Canvas />
     </div>
   )
 }

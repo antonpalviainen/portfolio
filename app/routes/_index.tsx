@@ -47,6 +47,12 @@ export default function Index() {
           >
             Highlight
           </Link>
+          <Link
+            className="text-[#7896bd] hover:text-[#a6bdd9]"
+            to="/demos/grid"
+          >
+            Grid
+          </Link>
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
@@ -58,7 +64,7 @@ export default function Index() {
           <span className="mx-2">-</span>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
-            to="/demos/404-does-not-exist"
+            to="/demos/does-not-exist"
           >
             Error Page
           </Link>
