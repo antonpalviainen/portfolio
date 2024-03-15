@@ -10,7 +10,7 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export default function Page() {
   return (
-    <div className="text-lg space-y-4">
+    <div className=" max-w-[60rem] text-lg space-y-4">
       <h1 className="pb-2 text-3xl font-semibold border-b border-zinc-700">
         FindRegex
       </h1>
