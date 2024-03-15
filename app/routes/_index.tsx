@@ -3,10 +3,10 @@ import { Link } from '@remix-run/react'
 
 export default function Index() {
   return (
-    <main className="flex flex-col p-4 space-y-12">
-      <section className="flex flex-col justify-center items-center md:mt-56">
+    <main className="flex flex-col items-center p-4 space-y-12">
+      <section className="text-center md:mt-56">
         <h1 className="text-6xl font-bold mb-3">Links</h1>
-        <p className="text-center">
+        <p>
           <a
             className="text-[#7896bd] hover:text-[#a6bdd9]"
             href="https://antonpalviainen.dev"
@@ -30,9 +30,9 @@ export default function Index() {
           </Link>
         </p>
       </section>
-      <section className="flex flex-col justify-center items-center">
+      <section className="text-center">
         <h1 className="text-6xl font-bold mb-3">Demos</h1>
-        <p className="text-center">
+        <p>
           <Link
             className="text-[#7896bd] hover:text-[#a6bdd9]"
             to="/demos/tierlist"
@@ -71,9 +71,9 @@ export default function Index() {
           </Link>
         </p>
       </section>
-      <section className="flex flex-col justify-center items-center">
+      <section className="text-center">
         <h1 className="text-6xl font-bold mb-3">Notes</h1>
-        <p className="text-center">
+        <p>
           Created using{' '}
           <a
             className="text-[#7896bd] hover:text-[#a6bdd9]"

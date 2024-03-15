@@ -89,7 +89,7 @@ export default function Page() {
         Developing
       </h2>
       <h3 className="text-xl">Run developement server</h3>
-      <pre className="whitespace-pre-line p-2 rounded bg-zinc-800">
+      <pre className="whitespace-pre-line break-words p-2 rounded bg-zinc-800">
         <code className="block">
           git clone https://github.com/antonpalviainen/find-regex.git
         </code>

@@ -1,12 +1,7 @@
 import { json } from '@remix-run/node'
-import {
-  isRouteErrorResponse,
-  useLoaderData,
-  useRouteError,
-} from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 
-import './tierlist.css'
 import apple from '../../images/apple.png'
 import banana from '../../images/banana.png'
 import kiwi from '../../images/kiwi.png'
@@ -51,21 +46,82 @@ export function loader() {
   return json({ rows: INIT_ROWS, items: INIT_ITEMS })
 }
 
-export default function DetailsPage() {
-  const data = useLoaderData<typeof loader>()
-
+function Item({
+  item,
+  itemI,
+  rowI,
+  image,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+}: {
+  item: ItemType
+  itemI: number
+  rowI: number
+  image: string
+  onDragStart: (e: React.DragEvent, rowI: number, itemI: number) => void
+  onDragEnter: (e: React.DragEvent, rowI: number, itemI: number | null) => void
+  onDragEnd: () => void
+}) {
   return (
-    <div>
-      <Tierlist rows={data.rows} initItems={data.items} />
-      <p className="my-3 text-lg">
-        Images from{' '}
-        <a
-          className="text-[#7896bd] hover:text-[#a6bdd9]"
-          href="https://pixabay.com"
+    <div
+      className="w-[110px] h-[110px] box-border bg-contain bg-no-repeat border-[5px] border-black"
+      onDragStart={(e) => onDragStart(e, rowI, itemI)}
+      onDragEnter={(e) => onDragEnter(e, rowI, itemI)}
+      onDragOver={(e) => e.preventDefault()}
+      onDragEnd={onDragEnd}
+      onDrop={onDragEnd}
+      draggable
+      title={item.name}
+      style={{ backgroundImage: `url(${image})` }}
+    ></div>
+  )
+}
+
+function Row({
+  rowLabel,
+  items,
+  rowI,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+}: {
+  rowLabel?: RowType
+  items: ItemType[]
+  rowI: number
+  onDragStart: (e: React.DragEvent, rowI: number, itemI: number) => void
+  onDragEnter: (e: React.DragEvent, rowI: number, itemI: number | null) => void
+  onDragEnd: () => void
+}) {
+  return (
+    <div
+      className="flex flex-wrap min-h-[110px]"
+      onDragEnter={(e) => onDragEnter(e, rowI, null)}
+      onDragOver={(e) => e.preventDefault()}
+      onDragEnd={onDragEnd}
+      onDrop={onDragEnd}
+    >
+      {rowLabel ? (
+        <div
+          className="w-[110px] h-[110px] flex justify-center items-center box-border text-black border-[5px] border-black"
+          contentEditable={false}
+          style={{ backgroundColor: rowLabel.color }}
         >
-          Pixabay
-        </a>
-      </p>
+          {rowLabel.name}
+        </div>
+      ) : null}
+      {items.map((item, itemI) => (
+        <Item
+          item={item}
+          itemI={itemI}
+          rowI={rowI}
+          image={item.image}
+          onDragStart={onDragStart}
+          onDragEnter={onDragEnter}
+          onDragEnd={onDragEnd}
+          key={itemI}
+        />
+      ))}
     </div>
   )
 }
@@ -114,11 +170,12 @@ function Tierlist({
 
   function onDragEnd() {
     // save the new order to localStorage
+    console.log('saving to localStorage')
     window.localStorage.setItem('tierlist', JSON.stringify(items))
   }
 
   return (
-    <div className="list">
+    <div className="p-[5px] bg-black">
       {rows
         ? rows.map((row, rowI) => (
             <Row
@@ -143,98 +200,21 @@ function Tierlist({
   )
 }
 
-function Row({
-  rowLabel,
-  items,
-  rowI,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
-}: {
-  rowLabel?: RowType
-  items: ItemType[]
-  rowI: number
-  onDragStart: (e: React.DragEvent, rowI: number, itemI: number) => void
-  onDragEnter: (e: React.DragEvent, rowI: number, itemI: number | null) => void
-  onDragEnd: () => void
-}) {
+export default function Page() {
+  const data = useLoaderData<typeof loader>()
+
   return (
-    <div
-      className="row"
-      onDragEnter={(e) => onDragEnter(e, rowI, null)}
-      onDragOver={(e) => e.preventDefault()}
-      onDragEnd={onDragEnd}
-    >
-      {rowLabel ? (
-        <div
-          className="row-label"
-          contentEditable={false}
-          style={{ backgroundColor: rowLabel.color }}
+    <div className="">
+      <Tierlist rows={data.rows} initItems={data.items} />
+      <p className="my-3 text-lg">
+        Images from{' '}
+        <a
+          className="text-[#7896bd] hover:text-[#a6bdd9]"
+          href="https://pixabay.com"
         >
-          {rowLabel.name}
-        </div>
-      ) : null}
-      {items.map((item, itemI) => (
-        <Item
-          item={item}
-          itemI={itemI}
-          rowI={rowI}
-          image={item.image}
-          onDragStart={onDragStart}
-          onDragEnter={onDragEnter}
-          onDragEnd={onDragEnd}
-          key={itemI}
-        />
-      ))}
+          Pixabay
+        </a>
+      </p>
     </div>
   )
-}
-
-function Item({
-  item,
-  itemI,
-  rowI,
-  image,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
-}: {
-  item: ItemType
-  itemI: number
-  rowI: number
-  image: string
-  onDragStart: (e: React.DragEvent, rowI: number, itemI: number) => void
-  onDragEnter: (e: React.DragEvent, rowI: number, itemI: number | null) => void
-  onDragEnd: () => void
-}) {
-  return (
-    <div
-      className="item"
-      onDragStart={(e) => onDragStart(e, rowI, itemI)}
-      onDragEnter={(e) => onDragEnter(e, rowI, itemI)}
-      onDragOver={(e) => e.preventDefault()}
-      onDragEnd={onDragEnd}
-      draggable
-      title={item.name}
-      style={{ backgroundImage: `url(${image})` }}
-    ></div>
-  )
-}
-
-export function ErrorBoundary() {
-  const error = useRouteError()
-
-  if (error instanceof Error) {
-    return <div>An unexpected error occurred: {error.message}</div>
-  }
-
-  if (!isRouteErrorResponse(error)) {
-    return <h1>Unknown Error</h1>
-  }
-
-  if (error.status === 404) {
-    return <div>Note not found</div>
-  }
-
-  return <div>An unexpected error occurred: {error.statusText}</div>
 }

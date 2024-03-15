@@ -2,8 +2,8 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 
 export default function DemosPage() {
   return (
-    <div className="flex flex-col">
-      <header className="flex items-center p-4 gap-4">
+    <div>
+      <header className="p-4 space-x-4">
         <Link to="/" className="font-bold hover:text-zinc-300">
           Home
         </Link>

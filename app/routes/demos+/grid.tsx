@@ -34,7 +34,7 @@ function Field({
       <input
         id={id}
         {...inputProps}
-        className="table-cell ml-3 mb-3 text-black"
+        className="table-cell max-w-20 ml-3 mb-3 px-0.5 text-black rounded"
       />
     </div>
   )
@@ -144,11 +144,11 @@ function Grid() {
   }
 
   return (
-    <div className="flex items-start h-[90vh]">
+    <div className="flex flex-col lg:h-[90vh] lg:flex-row">
       <canvas ref={canvasRef} className="h-full">
         grid
       </canvas>
-      <div className="ml-6">
+      <div className="mt-6 ml-6">
         <div className="table">
           <Field
             label="Margin"
@@ -227,7 +227,7 @@ function Grid() {
             Export as PNG
           </button>
         </div>
-        <div className='mt-12'>
+        <div className="mt-12">
           <p>An app for creating printable grids.</p>
         </div>
       </div>
