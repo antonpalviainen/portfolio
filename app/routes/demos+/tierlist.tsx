@@ -175,7 +175,7 @@ function Tierlist({
   }
 
   return (
-    <div className="p-[5px] bg-black">
+    <div className="max-w-[1200px] p-[5px] bg-black">
       {rows
         ? rows.map((row, rowI) => (
             <Row
@@ -204,7 +204,7 @@ export default function Page() {
   const data = useLoaderData<typeof loader>()
 
   return (
-    <div className="">
+    <div>
       <Tierlist rows={data.rows} initItems={data.items} />
       <p className="my-3 text-lg">
         Images from{' '}
