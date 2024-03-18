@@ -10,7 +10,7 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export default function Page() {
   return (
-    <div className=" max-w-[60rem] text-lg space-y-4">
+    <div className=" max-w-[50rem] text-lg space-y-4">
       <h1 className="pb-2 text-3xl font-semibold border-b border-zinc-700">
         FindRegex
       </h1>
@@ -36,7 +36,7 @@ export default function Page() {
           string with regex mode turned off
         </li>
         <li>Background color for highlighted text</li>
-        <li>Run query</li>
+        <li>Run the query</li>
         <li>Number of matches on page</li>
         <li>Expand or collapse options</li>
         <li>Toggle ignore case. Case is ignored by default.</li>
@@ -88,7 +88,7 @@ export default function Page() {
       <h2 className="pb-2 text-2xl font-semibold border-b border-zinc-700">
         Developing
       </h2>
-      <h3 className="text-xl">Run developement server</h3>
+      <h3 className="text-xl">Run a developement server</h3>
       <pre className="whitespace-pre-line break-words p-2 rounded bg-zinc-800">
         <code className="block">
           git clone https://github.com/antonpalviainen/find-regex.git
@@ -97,7 +97,9 @@ export default function Page() {
         <code className="block">npm run dev</code>
       </pre>
       <h3 className="text-xl">Build</h3>
-      <code className="p-1 rounded bg-zinc-800">npm run build</code>
+      <code className="inline-block p-1 rounded bg-zinc-800">
+        npm run build
+      </code>
     </div>
   )
 }
@@ -120,7 +122,7 @@ function HighlighterDemo() {
         instance={instances[0]}
         handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
         initOptions={{
-          query: 'reg(?:ular)',
+          query: 'reg(?:ular)?',
           backgroundColor: '#00aaff',
           expanded: true,
         }}
@@ -177,6 +179,13 @@ function QueryForm({
     initOptions?.isUsingRegex ?? true
   )
   const [matchCount, setMatchCount] = useState(0)
+
+  useEffect(() => {
+    if (initOptions?.query) {
+      instance.setQuery(initOptions.query)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     instance.upsertStyle(backgroundColor, foregroundColor)
