@@ -92,7 +92,7 @@ export default function LoginPage() {
               aria-invalid={actionData?.errors?.username ? true : undefined}
               aria-describedby="username-error"
               className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
-              placeholder='admin'
+              placeholder="admin"
             />
             {actionData?.errors?.username ? (
               <div className="pt-1 text-red-600" id="username-error">
@@ -116,7 +116,7 @@ export default function LoginPage() {
               aria-invalid={actionData?.errors?.password ? true : undefined}
               aria-describedby="password-error"
               className="w-full rounded border border-gray-500 text-slate-800 px-2 py-1 text-lg"
-              placeholder='test'
+              placeholder="test"
             />
             {actionData?.errors?.password ? (
               <div className="pt-1 text-red-600" id="password-error">
@@ -157,6 +157,16 @@ export default function LoginPage() {
               Sign up
             </Link>
           </div>
+        </div>
+        <div>
+          <p>
+            <a
+              href="https://github.com/antonpalviainen/portfolio/blob/main/app/routes/demos%2B/login.tsx"
+              className="text-[#7896bd] hover:text-[#a6bdd9]"
+            >
+              View on GitHub
+            </a>
+          </p>
         </div>
       </Form>
     </div>

@@ -215,6 +215,14 @@ export default function Page() {
           Pixabay
         </a>
       </p>
+      <p>
+        <a
+          href="https://github.com/antonpalviainen/portfolio/blob/main/app/routes/demos%2B/tierlist.tsx"
+          className="text-[#7896bd] hover:text-[#a6bdd9]"
+        >
+          View on GitHub
+        </a>
+      </p>
     </div>
   )
 }

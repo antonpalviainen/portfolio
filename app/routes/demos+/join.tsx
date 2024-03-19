@@ -150,6 +150,16 @@ export default function Join() {
             </Link>
           </div>
         </div>
+        <div>
+          <p>
+            <a
+              href="https://github.com/antonpalviainen/portfolio/blob/main/app/routes/demos%2B/join.tsx"
+              className="text-[#7896bd] hover:text-[#a6bdd9]"
+            >
+              View on GitHub
+            </a>
+          </p>
+        </div>
       </Form>
     </div>
   )

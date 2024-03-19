@@ -88,6 +88,14 @@ export default function Page() {
       <h2 className="pb-2 text-2xl font-semibold border-b border-zinc-700">
         Developing
       </h2>
+      <p>
+        <a
+          href="https://github.com/antonpalviainen/portfolio/blob/main/app/routes/demos%2B/highlight.tsx"
+          className="text-2xl text-[#7896bd] hover:text-[#a6bdd9]"
+        >
+          View on GitHub
+        </a>
+      </p>
       <h3 className="text-xl">Run a developement server</h3>
       <pre className="whitespace-pre-line break-words p-2 rounded bg-zinc-800">
         <code className="block">
@@ -184,7 +192,7 @@ function QueryForm({
     if (initOptions?.query) {
       instance.setQuery(initOptions.query)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

@@ -227,8 +227,16 @@ function Grid() {
             Export as PNG
           </button>
         </div>
-        <div className="mt-12">
+        <div className="mt-12 space-y-3">
           <p>An app for creating printable grids.</p>
+          <p>
+            <a
+              href="https://github.com/antonpalviainen/portfolio/blob/main/app/routes/demos%2B/grid.tsx"
+              className="text-[#7896bd] hover:text-[#a6bdd9]"
+            >
+              View on GitHub
+            </a>
+          </p>
         </div>
       </div>
     </div>
