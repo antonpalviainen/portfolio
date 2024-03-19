@@ -8,18 +8,20 @@ import styles from './highlight.css'
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
+const defaultOptions = {
+  query: '',
+  backgroundColor: '#ffff00',
+  foregroundColor: '#000000',
+  enabled: true,
+  expanded: false,
+  ignoreCase: true,
+  isUsingRegex: true,
+}
+
 interface QueryFormProps {
   instance: Highlighter
   handleRemoveQuery(): void
-  initOptions?: {
-    query?: string
-    backgroundColor?: string
-    foregroundColor?: string
-    enabled?: boolean
-    expanded?: boolean
-    ignoreCase?: boolean
-    isUsingRegex?: boolean
-  }
+  initOptions?: Partial<typeof defaultOptions>
 }
 
 function QueryForm({
@@ -30,13 +32,7 @@ function QueryForm({
   const [error, setError] = useState('')
   const [matchCount, setMatchCount] = useState(0)
   const [options, setOptions] = useState({
-    query: '',
-    backgroundColor: '#ffff00',
-    foregroundColor: '#000000',
-    enabled: true,
-    expanded: false,
-    ignoreCase: true,
-    isUsingRegex: true,
+    ...defaultOptions,
     ...initOptions,
   })
 
