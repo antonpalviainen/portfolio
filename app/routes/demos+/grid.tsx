@@ -148,7 +148,7 @@ function Grid() {
       <canvas ref={canvasRef} className="h-full">
         grid
       </canvas>
-      <div className="mt-6 ml-6">
+      <div className="max-w-96 p-6">
         <div className="table">
           <Field
             label="Margin"
