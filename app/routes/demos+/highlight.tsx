@@ -8,6 +8,222 @@ import styles from './highlight.css'
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
+interface QueryFormProps {
+  instance: Highlighter
+  handleRemoveQuery(): void
+  initOptions?: {
+    query?: string
+    backgroundColor?: string
+    foregroundColor?: string
+    enabled?: boolean
+    expanded?: boolean
+    ignoreCase?: boolean
+    isUsingRegex?: boolean
+  }
+}
+
+function QueryForm({
+  instance,
+  handleRemoveQuery,
+  initOptions,
+}: QueryFormProps) {
+  const [error, setError] = useState('')
+  const [matchCount, setMatchCount] = useState(0)
+  const [options, setOptions] = useState({
+    query: '',
+    backgroundColor: '#ffff00',
+    foregroundColor: '#000000',
+    enabled: true,
+    expanded: false,
+    ignoreCase: true,
+    isUsingRegex: true,
+    ...initOptions,
+  })
+
+  useEffect(() => {
+    if (initOptions?.query) {
+      instance.setQuery(initOptions.query)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    instance.upsertStyle(options.backgroundColor, options.foregroundColor)
+  }, [instance, options.backgroundColor, options.foregroundColor])
+
+  function handleQueryToggle() {
+    setOptions({ ...options, enabled: !options.enabled })
+    instance.upsertStyle(
+      options.enabled ? 'unset' : options.backgroundColor,
+      options.enabled ? 'unset' : options.foregroundColor
+    )
+  }
+
+  function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setOptions({ ...options, query: e.target.value })
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      instanceQuery(options.query)
+    }
+  }
+
+  function handleBGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setOptions({ ...options, backgroundColor: e.target.value })
+  }
+
+  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    instanceQuery(options.query)
+  }
+
+  function handleExpandOptions(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setOptions({ ...options, expanded: !options.expanded })
+  }
+
+  function handleIsUsingRegexToggle() {
+    setOptions({ ...options, isUsingRegex: !options.isUsingRegex })
+    instance.setIsUsingRegex(!options.isUsingRegex)
+    instanceQuery(options.query)
+  }
+
+  function handleIgnoreCaseToggle() {
+    setOptions({ ...options, ignoreCase: !options.ignoreCase })
+    instance.setIgnoreCase(!options.ignoreCase)
+    instanceQuery(options.query)
+  }
+
+  function handleFGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setOptions({ ...options, foregroundColor: e.target.value })
+  }
+
+  function instanceQuery(query: string | undefined) {
+    if (!query) return
+
+    const count = instance.setQuery(query)
+    if (typeof count === 'number') {
+      setMatchCount(count)
+      setError('')
+    } else {
+      setError('Invalid regular expression')
+    }
+  }
+
+  return (
+    <div className="query-form">
+      <div className="main-settings">
+        <input
+          type="checkbox"
+          checked={options.enabled}
+          onChange={handleQueryToggle}
+          title="Enable/disable highlighting"
+        />
+        <input
+          className="query-input"
+          type="text"
+          value={options.query}
+          onChange={handleQueryChange}
+          onKeyDown={handleKeyDown}
+          autoComplete="off"
+          title="Regular expression to highlight"
+        />
+        <input
+          type="color"
+          value={options.backgroundColor}
+          onChange={handleBGColorChange}
+          title="Change highlight color"
+        />
+        <button onClick={handleQuerySubmit} title="Highlight">
+          Find
+        </button>
+        <span className="match-count">{matchCount}</span>
+        <button onClick={handleExpandOptions}>
+          {options.expanded ? '⯅' : '⯆'}
+        </button>
+      </div>
+      {options.expanded ? (
+        <div className="additional-settings">
+          <div className="checkbox">
+            <input
+              id="isUsingRegex"
+              type="checkbox"
+              checked={options.isUsingRegex}
+              onChange={handleIsUsingRegexToggle}
+            />
+            <label htmlFor="isUsingRegex">Regex</label>
+          </div>
+          <div className="checkbox">
+            <input
+              id="ignoreCase"
+              type="checkbox"
+              checked={options.ignoreCase}
+              onChange={handleIgnoreCaseToggle}
+            />
+            <label htmlFor="ignoreCase">Ignore case</label>
+          </div>
+          <input
+            type="color"
+            value={options.foregroundColor}
+            onChange={handleFGColorChange}
+            title="Change highlight text color"
+          />
+          <button
+            className="remove-button"
+            onClick={handleRemoveQuery}
+            title="Remove query"
+          >
+            Remove
+          </button>
+        </div>
+      ) : null}
+      {error ? <p className="error">{error}</p> : null}
+    </div>
+  )
+}
+
+function HighlighterDemo() {
+  const [instances, setInstances] = useState([new Highlighter()])
+
+  function handleAddQuery() {
+    setInstances([...instances, new Highlighter()])
+  }
+
+  function handleRemoveQuery(instanceId: number) {
+    instances.find((instance) => instance.id === instanceId)?.destroy()
+    setInstances(instances.filter((instance) => instance.id !== instanceId))
+  }
+
+  return (
+    <div className="highlighter-demos">
+      <QueryForm
+        instance={instances[0]}
+        handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
+        initOptions={{
+          query: 'reg(?:ular)? ?ex(?:pressions?)?',
+          backgroundColor: '#00ccff',
+          expanded: true,
+        }}
+      />
+      {instances.slice(1).map((instance) => (
+        <QueryForm
+          key={instance.id}
+          instance={instance}
+          handleRemoveQuery={() => handleRemoveQuery(instance.id)}
+        />
+      ))}
+      <button
+        className="add-button"
+        onClick={handleAddQuery}
+        title="Add new query"
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
 export default function Page() {
   return (
     <div className=" max-w-[50rem] text-lg space-y-4">
@@ -108,221 +324,6 @@ export default function Page() {
       <code className="inline-block p-1 rounded bg-zinc-800">
         npm run build
       </code>
-    </div>
-  )
-}
-
-function HighlighterDemo() {
-  const [instances, setInstances] = useState([new Highlighter()])
-
-  function handleAddQuery() {
-    setInstances([...instances, new Highlighter()])
-  }
-
-  function handleRemoveQuery(instanceId: number) {
-    instances.find((instance) => instance.id === instanceId)?.destroy()
-    setInstances(instances.filter((instance) => instance.id !== instanceId))
-  }
-
-  return (
-    <div className="highlighter-demos">
-      <QueryForm
-        instance={instances[0]}
-        handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
-        initOptions={{
-          query: 'reg(?:ular)?',
-          backgroundColor: '#00aaff',
-          expanded: true,
-        }}
-      />
-      {instances.slice(1).map((instance) => (
-        <QueryForm
-          key={instance.id}
-          instance={instance}
-          handleRemoveQuery={() => handleRemoveQuery(instance.id)}
-        />
-      ))}
-      <button
-        className="add-button"
-        onClick={handleAddQuery}
-        title="Add new query"
-      >
-        +
-      </button>
-    </div>
-  )
-}
-
-interface QueryFormProps {
-  instance: Highlighter
-  handleRemoveQuery(): void
-  initOptions?: {
-    query?: string
-    backgroundColor?: string
-    foregroundColor?: string
-    enabled?: boolean
-    expanded?: boolean
-    ignoreCase?: boolean
-    isUsingRegex?: boolean
-  }
-}
-
-function QueryForm({
-  instance,
-  handleRemoveQuery,
-  initOptions,
-}: QueryFormProps) {
-  const [query, setQuery] = useState(initOptions?.query ?? '')
-  const [error, setError] = useState('')
-  const [foregroundColor, setFGColor] = useState(
-    initOptions?.foregroundColor ?? '#000000'
-  )
-  const [backgroundColor, setBGColor] = useState(
-    initOptions?.backgroundColor ?? '#ffff00'
-  )
-  const [enabled, setEnabled] = useState(initOptions?.enabled ?? true)
-  const [expanded, setExpanded] = useState(initOptions?.expanded ?? false)
-  const [ignoreCase, setIgnoreCase] = useState(initOptions?.ignoreCase ?? true)
-  const [isUsingRegex, setIsUsingRegex] = useState(
-    initOptions?.isUsingRegex ?? true
-  )
-  const [matchCount, setMatchCount] = useState(0)
-
-  useEffect(() => {
-    if (initOptions?.query) {
-      instance.setQuery(initOptions.query)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    instance.upsertStyle(backgroundColor, foregroundColor)
-  }, [instance, backgroundColor, foregroundColor])
-
-  function handleQueryToggle() {
-    setEnabled(!enabled)
-    instance.upsertStyle(
-      enabled ? 'unset' : backgroundColor,
-      enabled ? 'unset' : foregroundColor
-    )
-  }
-
-  function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value)
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
-      instanceQuery(query)
-    }
-  }
-
-  function handleBGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setBGColor(e.target.value)
-  }
-
-  function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    instanceQuery(query)
-  }
-
-  function handleExpandOptions(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    setExpanded(!expanded)
-  }
-
-  function handleIsUsingRegexToggle() {
-    setIsUsingRegex(!isUsingRegex)
-    instance.setIsUsingRegex(!isUsingRegex)
-    instanceQuery(query)
-  }
-
-  function handleIgnoreCaseToggle() {
-    setIgnoreCase(!ignoreCase)
-    instance.setIgnoreCase(!ignoreCase)
-    instanceQuery(query)
-  }
-
-  function handleFGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFGColor(e.target.value)
-  }
-
-  function instanceQuery(query: string) {
-    const count = instance.setQuery(query)
-    if (typeof count === 'number') {
-      setMatchCount(count)
-      setError('')
-    } else {
-      setError('Invalid regular expression')
-    }
-  }
-
-  return (
-    <div className="query-form">
-      <div className="main-settings">
-        <input
-          type="checkbox"
-          checked={enabled}
-          onChange={handleQueryToggle}
-          title="Enable/disable highlighting"
-        />
-        <input
-          className="query-input"
-          type="text"
-          value={query}
-          onChange={handleQueryChange}
-          onKeyDown={handleKeyDown}
-          autoComplete="off"
-          title="Regular expression to highlight"
-        />
-        <input
-          type="color"
-          value={backgroundColor}
-          onChange={handleBGColorChange}
-          title="Change highlight color"
-        />
-        <button onClick={handleQuerySubmit} title="Highlight">
-          Find
-        </button>
-        <span className="match-count">{matchCount}</span>
-        <button onClick={handleExpandOptions}>{expanded ? '⯅' : '⯆'}</button>
-      </div>
-      {expanded ? (
-        <div className="additional-settings">
-          <div className="checkbox">
-            <input
-              id="isUsingRegex"
-              type="checkbox"
-              checked={isUsingRegex}
-              onChange={handleIsUsingRegexToggle}
-            />
-            <label htmlFor="isUsingRegex">Regex</label>
-          </div>
-          <div className="checkbox">
-            <input
-              id="ignoreCase"
-              type="checkbox"
-              checked={ignoreCase}
-              onChange={handleIgnoreCaseToggle}
-            />
-            <label htmlFor="ignoreCase">Ignore case</label>
-          </div>
-          <input
-            type="color"
-            value={foregroundColor}
-            onChange={handleFGColorChange}
-            title="Change highlight text color"
-          />
-          <button
-            className="remove-button"
-            onClick={handleRemoveQuery}
-            title="Remove query"
-          >
-            Remove
-          </button>
-        </div>
-      ) : null}
-      {error ? <p className="error">{error}</p> : null}
     </div>
   )
 }
