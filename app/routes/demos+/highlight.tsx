@@ -37,9 +37,7 @@ function QueryForm({
   })
 
   useEffect(() => {
-    if (initOptions?.query) {
-      instance.setQuery(initOptions.query)
-    }
+    highlight(options.query)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -61,7 +59,7 @@ function QueryForm({
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
-      instanceQuery(options.query)
+      highlight(options.query)
     }
   }
 
@@ -71,7 +69,7 @@ function QueryForm({
 
   function handleQuerySubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-    instanceQuery(options.query)
+    highlight(options.query)
   }
 
   function handleExpandOptions(e: React.MouseEvent<HTMLButtonElement>) {
@@ -82,20 +80,20 @@ function QueryForm({
   function handleIsUsingRegexToggle() {
     setOptions({ ...options, isUsingRegex: !options.isUsingRegex })
     instance.setIsUsingRegex(!options.isUsingRegex)
-    instanceQuery(options.query)
+    highlight(options.query)
   }
 
   function handleIgnoreCaseToggle() {
     setOptions({ ...options, ignoreCase: !options.ignoreCase })
     instance.setIgnoreCase(!options.ignoreCase)
-    instanceQuery(options.query)
+    highlight(options.query)
   }
 
   function handleFGColorChange(e: React.ChangeEvent<HTMLInputElement>) {
     setOptions({ ...options, foregroundColor: e.target.value })
   }
 
-  function instanceQuery(query: string | undefined) {
+  function highlight(query: string | undefined) {
     if (!query) return
 
     const count = instance.setQuery(query)
