@@ -88,7 +88,10 @@ function HighlighterForm({
   }
 
   function highlight(query: string | undefined) {
-    if (!query) return
+    if (!query) {
+      instance.removeHighlight()
+      return
+    }
 
     const count = instance.setQuery(query)
     if (typeof count === 'number') {
@@ -180,7 +183,8 @@ export function HighlighterDemo() {
     return () => {
       instances.forEach((instance) => instance.destroy())
     }
-  }, [instances])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function handleAddQuery() {
     setInstances([...instances, new Highlighter()])

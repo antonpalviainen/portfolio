@@ -56,6 +56,12 @@ export default class Highlighter {
     this.isUsingRegex = value
   }
 
+  removeHighlight() {
+    document.querySelectorAll(`.${this.styleClass}`).forEach((el) => {
+      el.outerHTML = el.innerHTML
+    })
+  }
+
   destroy() {
     if (this.observer) {
       this.observer.disconnect()
@@ -173,11 +179,5 @@ export default class Highlighter {
     }
 
     return matches.length
-  }
-
-  private removeHighlight() {
-    document.querySelectorAll(`.${this.styleClass}`).forEach((el) => {
-      el.outerHTML = el.innerHTML
-    })
   }
 }
