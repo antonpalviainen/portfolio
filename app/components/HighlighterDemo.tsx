@@ -2,32 +2,25 @@ import { useEffect, useState } from 'react'
 
 import Highlighter from '~/utils/highlighter'
 
-const defaultOptions = {
-  query: '',
-  backgroundColor: '#ffff00',
-  foregroundColor: '#000000',
-  enabled: true,
-  expanded: false,
-  ignoreCase: true,
-  isUsingRegex: true,
-}
-
 interface HighlighterFormProps {
   instance: Highlighter
   handleRemoveQuery(): void
-  initOptions?: Partial<typeof defaultOptions>
 }
 
 function HighlighterForm({
   instance,
   handleRemoveQuery,
-  initOptions,
 }: HighlighterFormProps) {
   const [error, setError] = useState('')
   const [matchCount, setMatchCount] = useState(0)
   const [options, setOptions] = useState({
-    ...defaultOptions,
-    ...initOptions,
+    query: '',
+    backgroundColor: '#ffff00',
+    foregroundColor: '#000000',
+    enabled: true,
+    expanded: false,
+    ignoreCase: true,
+    isUsingRegex: true,
   })
 
   useEffect(() => {
@@ -197,16 +190,7 @@ export function HighlighterDemo() {
 
   return (
     <div className="highlighter-demos">
-      <HighlighterForm
-        instance={instances[0]}
-        handleRemoveQuery={() => handleRemoveQuery(instances[0].id)}
-        initOptions={{
-          query: 'reg(?:ular)? ?ex(?:pressions?)?',
-          backgroundColor: '#00ccff',
-          expanded: true,
-        }}
-      />
-      {instances.slice(1).map((instance) => (
+      {instances.map((instance) => (
         <HighlighterForm
           key={instance.id}
           instance={instance}
