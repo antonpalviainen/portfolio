@@ -106,6 +106,7 @@ function HighlighterForm({
           type="checkbox"
           checked={options.enabled}
           onChange={handleQueryToggle}
+          name="query-toggle"
           title="Enable/disable highlighting"
         />
         <input
@@ -115,6 +116,7 @@ function HighlighterForm({
           onChange={handleQueryChange}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          name="query-input"
           title="Regular expression to highlight"
         />
         <input
@@ -173,6 +175,12 @@ function HighlighterForm({
 
 export function HighlighterDemo() {
   const [instances, setInstances] = useState([new Highlighter()])
+
+  useEffect(() => {
+    return () => {
+      instances.forEach((instance) => instance.destroy())
+    }
+  }, [instances])
 
   function handleAddQuery() {
     setInstances([...instances, new Highlighter()])
