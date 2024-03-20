@@ -1,4 +1,4 @@
-import { json } from '@remix-run/node'
+import { MetaFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 
@@ -226,3 +226,5 @@ export default function Page() {
     </div>
   )
 }
+
+export const meta: MetaFunction = () => [{ title: 'Tierlist' }]

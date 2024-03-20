@@ -1,3 +1,4 @@
+import { MetaFunction } from '@remix-run/node'
 import { useEffect, useId, useRef, useState } from 'react'
 
 function dpi(millimeters: number, dpi = 300) {
@@ -246,3 +247,5 @@ function Grid() {
 export default function Page() {
   return <Grid />
 }
+
+export const meta: MetaFunction = () => [{ title: 'Grid' }]

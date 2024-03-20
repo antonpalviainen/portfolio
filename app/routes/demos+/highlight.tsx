@@ -1,4 +1,4 @@
-import { LinksFunction } from '@remix-run/node'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
 
 import { HighlighterDemo } from '~/components/HighlighterDemo'
 import options from '~/images/options.png'
@@ -110,3 +110,5 @@ export default function Page() {
     </div>
   )
 }
+
+export const meta: MetaFunction = () => [{ title: 'Highlight' }]

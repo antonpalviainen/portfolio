@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from '@remix-run/node'
+import { LoaderFunctionArgs, MetaFunction, json } from '@remix-run/node'
 import { Form, useLoaderData } from '@remix-run/react'
 
 import { requireUser } from '~/utils/session.server'
@@ -33,3 +33,5 @@ export default function Accounts() {
     </div>
   )
 }
+
+export const meta: MetaFunction = () => [{ title: 'Accounts' }]
